@@ -21,6 +21,8 @@ import dbConfig from "./dbs/config"
 import passport from "./interface/utils/passport"
 //user接口
 import users from "./interface/users"
+import geo from './interface/geo'
+import search from './interface/search'
 /*--------------------end-----------------------------*/
 
 
@@ -64,7 +66,10 @@ async function start() {
     }
     /*---------------------start----------------------------*/
     app.use(users.routes()).use(users.allowedMethods())
-        /*--------------------end-----------------------------*/
+    app.use(geo.routes()).use(geo.allowedMethods())
+    app.use(search.routes()).use(search.allowedMethods())
+
+    /*--------------------end-----------------------------*/
     app.use(ctx => {
         ctx.status = 200 // koa defaults to 404 when it sees that status is unset
 
