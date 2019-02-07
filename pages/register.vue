@@ -121,8 +121,6 @@ export default {
       })
       this.statusMsg = ''
       if (namePass) {
-        // console.log('namePass False')
-
         return false
       }
       this.$refs['ruleForm'].validateField('email', valid => {

@@ -11,6 +11,7 @@ let router = new Router({
     prefix: '/users'
 })
 let Store = new Redis().client
+
 router.post("/signup", async(ctx) => {
     const {
         username,
@@ -23,16 +24,16 @@ router.post("/signup", async(ctx) => {
         const saveCode = await Store.hget(`nodemail:${username}`, "code");
         const saveExpire = await Store.hget(`nodemail:${username}`, "expire");
         if (code === saveCode) {
-            console.log('code,saveCode,saveExpire', code, saveCode, saveExpire);
+            // console.log('code,saveCode,saveExpire', code, saveCode, saveExpire);
             if (new Date().getTime() - saveExpire > 0) {
                 ctx.body = {
                     code: -1,
-                    msg: "验证吗已过期，请重新尝试"
+                    msg: "验证码已过期，请重新获取"
                 }
                 return false;
             }
         } else {
-            console.log('请填写正确的验证码');
+            // console.log('请填写正确的验证码');
             ctx.body = {
                 code: -1,
                 msg: "请填写正确的验证码"
@@ -40,7 +41,7 @@ router.post("/signup", async(ctx) => {
             return false;
         }
     } else {
-        console.log('请填写验证码');
+        // console.log('请填写验证码');
 
         ctx.body = {
             code: -1,
@@ -57,14 +58,16 @@ router.post("/signup", async(ctx) => {
             code: -1,
             msg: "用户名已被注册"
         }
-        return
+        return false;
     }
+    //new User().save()的语法糖
     let nuser = await User.create({
         username,
         password,
         email
     })
     if (nuser) {
+        //自动登录
         let res = await axios.post('/users/signin', {
             username,
             password
@@ -88,8 +91,11 @@ router.post("/signup", async(ctx) => {
         }
     }
 })
+
+//登录接口
 router.post('/signin', async(ctx, next) => {
         return Passport.authenticate("local", function(err, user, info, status) {
+            console.log('err,user,info,status', err, user, info, status);
             if (err) {
                 ctx.body = {
                     code: -1,

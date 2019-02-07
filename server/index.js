@@ -7,24 +7,34 @@ const {
     Builder
 } = require('nuxt')
 
+/*--------------------start-----------------------------*/
+//添加依赖
 import mongoose from "mongoose"
 import bodyParser from "koa-bodyparser"
 import session from "koa-generic-session"
 import Redis from "koa-redis"
+//json格式化
 import json from "koa-json"
+//数据库配置
 import dbConfig from "./dbs/config"
+//passport配置
 import passport from "./interface/utils/passport"
+//user接口
 import users from "./interface/users"
+/*--------------------end-----------------------------*/
+
 
 const app = new Koa()
 const host = process.env.HOST || '127.0.0.1'
 const port = process.env.PORT || 3000
-
+    /*---------------------start----------------------------*/
 app.keys = ["mt", "keyskeys"]
+    //require
 app.proxy = true
 app.use(session({
     key: "mt",
     prefix: "mt:uid",
+    //session借助redis存储
     store: new Redis()
 }))
 
@@ -38,8 +48,8 @@ mongoose.connect(dbConfig.dbs, {
 })
 app.use(passport.initialize())
 app.use(passport.session())
-
-// Import and Set Nuxt.js options
+    /*--------------------end-----------------------------*/
+    // Import and Set Nuxt.js options
 let config = require('../nuxt.config.js')
 config.dev = !(app.env === 'production')
 
@@ -52,7 +62,9 @@ async function start() {
         const builder = new Builder(nuxt)
         await builder.build()
     }
+    /*---------------------start----------------------------*/
     app.use(users.routes()).use(users.allowedMethods())
+        /*--------------------end-----------------------------*/
     app.use(ctx => {
         ctx.status = 200 // koa defaults to 404 when it sees that status is unset
 

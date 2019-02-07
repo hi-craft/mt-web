@@ -1,6 +1,7 @@
 export default {
     dbs: 'mongodb://127.0.0.1:27017/student',
     redis: {
+        //将配置变为只读
         get host() {
             return "127.0.0.1"
         },
@@ -16,7 +17,7 @@ export default {
             return '363511503@qq.com'
         },
         get pass() {
-            return 'hey yooo'
+            return 'hey'
         },
         get code() {
             return () => {
