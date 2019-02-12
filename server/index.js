@@ -23,6 +23,8 @@ import passport from "./interface/utils/passport"
 import users from "./interface/users"
 import geo from './interface/geo'
 import search from './interface/search'
+import categroy from './interface/categroy'
+import cart from './interface/cart'
 /*--------------------end-----------------------------*/
 
 
@@ -68,8 +70,9 @@ async function start() {
     app.use(users.routes()).use(users.allowedMethods())
     app.use(geo.routes()).use(geo.allowedMethods())
     app.use(search.routes()).use(search.allowedMethods())
-
-    /*--------------------end-----------------------------*/
+    app.use(categroy.routes()).use(categroy.allowedMethods())
+    app.use(cart.routes()).use(cart.allowedMethods())
+        /*--------------------end-----------------------------*/
     app.use(ctx => {
         ctx.status = 200 // koa defaults to 404 when it sees that status is unset
 

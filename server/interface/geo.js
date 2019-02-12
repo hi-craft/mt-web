@@ -8,7 +8,6 @@ let router = new Router({
 })
 
 router.get('/getPosition', async(ctx, next) => {
-    console.log('Config.sign', Config.sign);
     let {
         status,
         data: {
@@ -60,6 +59,41 @@ router.get('/province', async(ctx) => {
     } = await axios.get(`${Config.requestUrl}/geo/province?sign=${Config.sign}`)
     ctx.body = {
         province: status === 200 ? province : []
+    }
+})
+router.get('/province/:id', async(ctx) => {
+    let {
+        status,
+        data: {
+            code,
+            city
+        }
+    } = await axios.get(`${Config.requestUrl}/geo/province/${ctx.params.id}?sign=${Config.sign}`)
+    ctx.body = {
+        city: status === 200 ? city : []
+    }
+})
+router.get('/city', async(ctx) => {
+    let {
+        status,
+        data: {
+            code,
+            city
+        }
+    } = await axios.get(`${Config.requestUrl}/geo/city?sign=${Config.sign}`)
+    ctx.body = {
+        city: status === 200 ? city : []
+    }
+})
+router.get('/hotCity', async(ctx) => {
+    let {
+        status,
+        data: {
+            hots
+        }
+    } = await axios.get(`${Config.requestUrl}/geo/hotCity?sign=${Config.sign}`)
+    ctx.body = {
+        city: status === 200 ? hots : []
     }
 })
 export default router;

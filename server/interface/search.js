@@ -41,4 +41,60 @@ router.get('/hotPlace', async(ctx) => {
         result: status === 200 ? result : []
     }
 })
+
+router.get('/resultsByKeywords', async(ctx) => {
+    const {
+        city,
+        keyword
+    } = ctx.query;
+    let {
+        status,
+        data: {
+            count,
+            pois
+        }
+    } = await axios.get(`${Config.requestUrl}/search/resultsByKeywords`, {
+        params: {
+            city,
+            keyword,
+            sign: Config.sign
+        }
+    })
+    ctx.body = {
+        count: status === 200 ? count : 0,
+        pois: status === 200 ? pois : []
+    }
+})
+router.get('/products', async(ctx) => {
+    let {
+        keyword,
+        city
+    } = ctx.query
+    let {
+        status,
+        data: {
+            product,
+            more
+        }
+    } = await axios.get(`${Config.requestUrl}/search/products`, {
+        params: {
+            keyword,
+            city,
+            sign: Config.sign
+        }
+    })
+    if (status === 200) {
+        ctx.body = {
+            product,
+            more: ctx.isAuthenticated() ? more : [],
+            login: ctx.isAuthenticated()
+        }
+    } else {
+        ctx.body = {
+            product: {},
+            more: ctx.isAuthenticated() ? more : [],
+            login: ctx.isAuthenticated()
+        }
+    }
+})
 export default router
